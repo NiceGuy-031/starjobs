@@ -1,0 +1,1244 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StarJobs.com | Find Your Next Opportunity</title>
+  <meta name="description" content="StarJobs connects job seekers with opportunities in Kenya and around the world.">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #17233b;
+    }
+
+    header {
+      background: #12233f;
+      color: white;
+      padding: 18px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    header h2 {
+      margin: 0;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 18px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 65px 20px;
+      background: linear-gradient(120deg, #e8f0ff, #e1f9ee);
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 48px);
+      margin: 0 0 15px;
+    }
+
+    .hero p {
+      color: #53627a;
+      font-size: 18px;
+    }
+
+    .search {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      max-width: 750px;
+      margin: 28px auto 0;
+    }
+
+    input, select, button {
+      padding: 13px;
+      font-size: 15px;
+      border-radius: 7px;
+    }
+
+    input, select {
+      border: 1px solid #ccd5e2;
+      background: white;
+    }
+
+    .search input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .section {
+      max-width: 1100px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    .categories, .jobs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .category, .job-card {
+      background: white;
+      border: 1px solid #e0e6ef;
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .category {
+      cursor: pointer;
+    }
+
+    .category:hover, .category.active {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+
+    .category h3 {
+      margin-top: 0;
+    }
+
+    .job-card h3 {
+      margin-top: 0;
+      color: #1d4ed8;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #e8f5ed;
+      color: #17653a;
+      border-radius: 5px;
+      padding: 5px 8px;
+      font-size: 12px;
+      margin: 4px 3px 10px 0;
+    }
+
+    .job-card p {
+      color: #53627a;
+    }
+
+    .job-card button {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .notice {
+      background: #fff5d8;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #6d5010;
+    }
+
+    footer {
+      text-align: center;
+      padding: 28px 15px;
+      background: #12233f;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 18px;
+      }
+
+      nav a {
+        margin-left: 0;
+        margin-right: 12px;
+      }
+
+      .search {
+        flex-direction: column;
+      }
+
+      .search input, .search select {
+        width: 100%;
+      }
+    }
+  
+/* StarJobs Employer Job Posting Form */
+.post-job-section {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.post-job-section h2 {
+    color: #123b70;
+    margin-bottom: 10px;
+}
+
+.post-job-section label {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.post-job-section input,
+.post-job-section select,
+.post-job-section textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font: inherit;
+    box-sizing: border-box;
+}
+
+.post-job-section textarea {
+    resize: vertical;
+}
+
+.post-job-section button {
+    margin-top: 20px;
+    padding: 13px 22px;
+    background: #123b70;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.post-job-section button:hover {
+    background: #1d4f91;
+}
+
+#post-job #jobMessage {
+    margin-top: 15px;
+    color: #166534;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+/* STARJOBS EMPLOYER FORM */
+#post-job.post-job-section {
+    width: calc(100% - 32px);
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 32px;
+    background: #fff;
+    border: 1px solid #e1e7ef;
+    border-radius: 14px;
+    box-shadow: 0 8px 25px rgba(18, 59, 112, 0.10);
+}
+
+#post-job h2 {
+    color: #123b70;
+    font-size: 28px;
+    margin-top: 0;
+}
+
+#post-job p {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+#post-job label {
+    display: block;
+    margin: 18px 0 7px;
+    color: #263449;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#post-job input,
+#post-job select,
+#post-job textarea {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #fff;
+    color: #1e293b;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+#post-job input:focus,
+#post-job select:focus,
+#post-job textarea:focus {
+    border-color: #2563eb;
+    outline: 2px solid #bfdbfe;
+}
+
+#post-job textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+#post-job button {
+    display: block;
+    width: 100%;
+    margin-top: 25px;
+    padding: 14px;
+    background: #123b70;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#post-job button:hover {
+    background: #1d4f91;
+}
+
+#post-job #jobMessage {
+    margin-top: 15px;
+    color: #166534;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    #post-job.post-job-section {
+        margin: 25px auto;
+        padding: 22px 18px;
+    }
+
+    #post-job h2 {
+        font-size: 23px;
+    }
+}
+ss
+  </style>
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // StarJobs database connection
+  const STARJOBS_SUPABASE_URL ="https://egzouchzmiveumxrznqa.supabase.co";
+  const STARJOBS_SUPABASE_KEY ="sb_publishable_A4t_xUSk9tHrXx-ZqCegLQ_Pd7H5Uyw";
+
+  const starJobsSupabase = window.supabase.createClient(
+    STARJOBS_SUPABASE_URL,
+    STARJOBS_SUPABASE_KEY
+  );
+</script>
+
+</head>
+
+<body>
+
+  <header>
+    <h2>🌐 StarJobs.com</h2>
+
+    <nav>
+      <a href="#">Home</a>
+      <a href="#categories">Categories</a>
+      <a href="#jobs">Find Jobs</a>
+      <a href="#employers">Employers</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Find Work. Build Your Future.</h1>
+
+    <p>
+      Discover opportunities in Kenya and around the world.
+    </p>
+
+    <form class="search" id="searchForm">
+      <input
+        id="keyword"
+        type="search"
+        placeholder="Job title or skill"
+        aria-label="Job title or skill"
+      >
+
+      <select id="location" aria-label="Location">
+        <option value="">Any location</option>
+        <option value="Kenya">Kenya</option>
+        <option value="Remote">Remote</option>
+        <option value="International">International</option>
+      </select>
+      
+<select id="categoryFilter" aria-label="Job category">
+  <option value="">All categories</option>
+  <option value="Customer Support">Customer Support</option>
+  <option value="Data Entry">Data Entry</option>
+  <option value="Technology">Technology</option>
+  <option value="Marketing">Marketing</option>
+</select>
+
+<select id="employmentTypeFilter" aria-label="Employment type">
+  <option value="">All employment types</option>
+  <option value="Full-time">Full-time</option>
+  <option value="Part-time">Part-time</option>
+  <option value="Contract">Contract</option>
+  <option value="Internship">Internship</option>
+</select>
+
+
+      <button type="submit">Search Jobs</button>
+    </form>
+  </section>
+
+  <section class="section" id="categories">
+    <h2>Explore Job Categories</h2>
+
+    <div class="categories">
+      <div class="category" data-category="Customer Support">
+        <h3>💬 Customer Support</h3>
+        <p>Chat, email and customer service.</p>
+      </div>
+
+      <div class="category" data-category="Data Entry">
+        <h3>📊 Data Entry</h3>
+        <p>Data processing and administration.</p>
+      </div>
+
+      <div class="category" data-category="Technology">
+        <h3>💻 Technology</h3>
+        <p>IT, software and web development.</p>
+      </div>
+
+      <div class="category" data-category="Marketing">
+        <h3>📣 Marketing</h3>
+        <p>Content creation and social media.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="jobs">
+    <h2>Latest Job Examples</h2>
+
+    <p id="resultCount">
+      Sample listings to demonstrate the website.
+    </p>
+
+    <p class="notice">
+      These are fictional examples, not verified vacancies.
+      Real job listings will be added in a later stage.
+    </p>
+
+    <div class="jobs" id="jobList"></div>
+  </section>
+
+  <section class="section" id="employers">
+    <h2>Are You an Employer?</h2>
+
+    <p>
+      StarJobs.com will help employers connect with suitable
+      candidates in Kenya and internationally.
+    </p>
+
+    <button id="postJob">Post a Job</button>
+  </section>
+
+  <footer>
+    <h3>StarJobs.com</h3>
+    <p>Connecting people with opportunities.</p>
+    <p>&copy; 2026 StarJobs.com. Demo website.</p>
+  </footer>
+
+  <script>
+    // Fictional listings for testing the first version.
+    const sampleJobs = [
+      {
+        title: "Customer Support Assistant",
+        company: "Example Company A",
+        location: "Kenya",
+        work: "Remote",
+        category: "Customer Support",
+        description: "Assist customers through chat and email."
+      },
+      {
+        title: "Data Entry Clerk",
+        company: "Example Company B",
+        location: "Kenya",
+        work: "On-site",
+        category: "Data Entry",
+        description: "Enter and organise information accurately."
+      },
+      {
+        title: "Virtual Assistant",
+        company: "Example Company C",
+        location: "International",
+        work: "Remote",
+        category: "Data Entry",
+        description: "Help with online research and administration."
+      },
+      {
+        title: "Junior Web Developer",
+        company: "Example Tech Studio",
+        location: "International",
+        work: "Remote",
+        category: "Technology",
+        description: "Assist with website development and testing."
+      },
+      {
+        title: "Social Media Assistant",
+        company: "Example Creative Team",
+        location: "Kenya",
+        work: "On-site",
+        category: "Marketing",
+        description: "Help prepare social media posts and content."
+      },
+      {
+        title: "Email Support Representative",
+        company: "Example Company D",
+        location: "International",
+        work: "Remote",
+        category: "Customer Support",
+        description: "Respond to customer questions by email."
+      }
+    ];
+
+    const jobList = document.getElementById("jobList");
+    const keyword = document.getElementById("keyword");
+    const locationSelect = document.getElementById("location");
+    
+const categoryFilter = document.getElementById("categoryFilter");
+const employmentTypeFilter = document.getElementById("employmentTypeFilter");
+
+    
+    const resultCount = document.getElementById("resultCount");
+
+    let activeCategory = "";
+    // Jobs loaded from Supabase
+let onlineJobs = [];
+
+// Load submitted jobs from this browser.
+function getAllJobs() {
+  let submittedJobs = [];
+
+  try {
+    submittedJobs = JSON.parse(
+      localStorage.getItem("starJobsPending") || "[]"
+    );
+
+    if (!Array.isArray(submittedJobs)) {
+      submittedJobs = [];
+    }
+  } catch (error) {
+    submittedJobs = [];
+  }
+
+  const formattedJobs = submittedJobs.map(job => ({
+    ...job,
+    work:
+      /remote/i.test(job.location || "") ||
+      job.type === "Remote"
+        ? "Remote"
+        : job.type || "Not specified",
+    pending: true
+  }));
+
+return [...sampleJobs, ...formattedJobs, ...onlineJobs];}
+
+async function loadApprovedJobs() {
+  try {
+    const { data, error } = await starJobsSupabase
+      .from("jobs")
+      .select(
+        "id, company, title, category, location, employment_type, salary, description, requirements, created_at"
+      )
+      .eq("status", "approved")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    onlineJobs = (data || []).map(job => ({
+      id: job.id,
+      company: job.company,
+      title: job.title,
+      category: job.category,
+      location: job.location,
+      work:
+        /remote/i.test(job.location || "") ||
+        job.employment_type === "Remote"
+          ? "Remote"
+          : job.employment_type || "Not specified",
+      salary: job.salary || "",
+      description: job.description,
+      requirements: job.requirements || "",
+      pending: false,
+      source: "supabase"
+    }));
+
+    displayJobs();
+    console.log("StarJobs: approved online jobs loaded:", onlineJobs.length);
+  } catch (error) {
+    console.error("Could not load online jobs:", error.message);
+  }
+}
+
+
+function displayJobs() {
+      
+const term = keyword.value.trim().toLowerCase();
+const location = locationSelect.value;
+const selectedCategory = categoryFilter.value;
+const selectedEmploymentType = employmentTypeFilter.value;
+
+
+const filteredJobs = getAllJobs().filter(job => {
+        const searchableText =
+          `${job.title} ${job.company} ${job.category} ${job.description}`
+          .toLowerCase();
+
+        const matchesKeyword =
+          !term || searchableText.includes(term);
+
+        
+const matchesCategory =
+    (!activeCategory || job.category === activeCategory) &&
+    (!selectedCategory || job.category === selectedCategory);
+
+const matchesEmploymentType =
+    !selectedEmploymentType ||
+    (job.employment_type || "").toLowerCase() ===
+    selectedEmploymentType.toLowerCase();
+
+
+        let matchesLocation = true;
+
+        if (location === "Kenya") {
+          matchesLocation = job.location === "Kenya";
+        } else if (location === "Remote") {
+          matchesLocation = job.work === "Remote";
+        } else if (location === "International") {
+          matchesLocation = job.location === "International";
+        }
+
+        return matchesKeyword &&
+       matchesCategory &&
+       matchesLocation &&
+       matchesEmploymentType;
+      });
+
+      resultCount.textContent =
+  `${filteredJobs.length} job(s) found.`;
+
+      jobList.replaceChildren();
+
+      if (filteredJobs.length === 0) {
+        jobList.textContent =
+          "No matching examples found. Try another search.";
+        return;
+      }
+
+      filteredJobs.forEach(job => {
+        const card = document.createElement("article");
+        card.className = "job-card";
+
+        const title = document.createElement("h3");
+        title.textContent = job.title;
+
+        const company = document.createElement("strong");
+        company.textContent = job.company;
+
+        const details = document.createElement("p");
+        details.textContent =
+          `${job.location} | ${job.work}`;
+
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = job.category;
+
+        const description = document.createElement("p");
+        description.textContent = job.description;
+
+        const button = document.createElement("button");
+        button.textContent = "View Details";
+
+        
+button.addEventListener("click", () => {
+    if (job.source === "supabase" && !job.pending) {
+        openApplicationForm(job);
+    } else {
+        alert(
+            `${job.title}\n\n` +
+            `Company: ${job.company}\n` +
+            `Location: ${job.location}\n` +
+            `Work style: ${job.work}\n\n` +
+            `${job.description}\n\n` +
+            "Applications are available for approved online jobs."
+        );
+    }
+});
+
+
+        card.append(title, company, details, tag);
+
+if (job.pending) {
+  const reviewTag = document.createElement("span");
+  reviewTag.className = "tag";
+  reviewTag.textContent = "Pending review";
+  card.appendChild(reviewTag);
+}
+
+card.append(description, button);
+
+        jobList.appendChild(card);
+      });
+    }
+
+    document.getElementById("searchForm")
+      .addEventListener("submit", function(event) {
+        event.preventDefault();
+        displayJobs();
+        document.getElementById("jobs")
+          .scrollIntoView({ behavior: "smooth" });
+      });
+
+    
+categoryFilter.addEventListener("change", displayJobs);
+employmentTypeFilter.addEventListener("change", displayJobs);
+
+
+    document.querySelectorAll(".category")
+      .forEach(category => {
+        category.addEventListener("click", () => {
+          const selected = category.dataset.category;
+
+          activeCategory =
+            activeCategory === selected ? "" : selected;
+
+          document.querySelectorAll(".category")
+            .forEach(item => {
+              item.classList.toggle(
+                "active",
+                item.dataset.category === activeCategory
+              );
+            });
+
+          displayJobs();
+
+          document.getElementById("jobs")
+            .scrollIntoView({ behavior: "smooth" });
+        });
+      });
+
+    
+document.getElementById("postJob")
+    .addEventListener("click", () => {
+        document.getElementById("post-job")
+            .scrollIntoView({ behavior: "smooth" });
+
+        document.getElementById("company").focus();
+    });
+
+
+    displayJobs();
+loadApprovedJobs();
+</script>
+  </script>
+  
+<section id="applicationSection"
+         style="display: none; max-width: 700px; margin: 30px auto; padding: 24px; background: #f3f6fb; border-radius: 12px;">
+
+    <h2>Apply for a Job</h2>
+    <p id="applicationJobTitle"></p>
+
+    <form id="applicationForm">
+        <input type="hidden" id="applicationJobId" name="job_id">
+
+        <label for="applicantName">Full Name *</label>
+        <input type="text" id="applicantName" name="applicant_name"
+               required maxlength="150">
+
+        <label for="applicantEmail">Email Address *</label>
+        <input type="email" id="applicantEmail" name="applicant_email"
+               required maxlength="254">
+
+        <label for="applicantPhone">Phone Number (Optional)</label>
+        <input type="tel" id="applicantPhone" name="applicant_phone"
+               maxlength="30" placeholder="e.g. 07XXXXXXXX">
+
+        <label for="coverLetter">Cover Letter (Optional)</label>
+        <textarea id="coverLetter" name="cover_letter"
+                  rows="6" maxlength="5000"
+                  placeholder="Tell the employer why you're suitable for this job."></textarea>
+                  
+
+
+
+        <button type="submit" id="applicationSubmitButton">
+            Submit Application
+        </button>
+
+        <button type="button" id="cancelApplicationButton">
+            Cancel
+        </button>
+    </form>
+
+    <p id="applicationMessage" role="status" aria-live="polite"></p>
+    <div id="cvUploadAfterSubmit" style="display: none;">
+    <h3>Upload Your CV</h3>
+    <p>Your application has been submitted. You can now upload your CV below.</p>
+
+    <label for="cvAfterSubmit">Choose your CV (PDF or DOCX, max 5 MB)</label>
+    <input
+        type="file"
+        id="cvAfterSubmit"
+        accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    >
+
+    <button type="button" id="uploadCVButton">Upload CV</button>
+    <p id="cvUploadMessage" role="status" aria-live="polite"></p>
+</div>
+</section>
+
+<script>
+    // Open the application form for an approved online job.
+    function openApplicationForm(job) {
+        const section = document.getElementById("applicationSection");
+        const form = document.getElementById("applicationForm");
+        const submitButton = document.getElementById("applicationSubmitButton");
+
+        form.reset();
+
+        document.getElementById("applicationJobId").value = job.id;
+        document.getElementById("applicationJobTitle").textContent =
+            "Applying for: " + job.title + " at " + job.company;
+
+        document.getElementById("applicationMessage").textContent = "";
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit Application";
+
+        section.style.display = "block";
+        section.scrollIntoView({ behavior: "smooth" });
+    }
+
+    // Submit the application to Supabase.
+    
+document.getElementById("applicationForm").addEventListener(
+    "submit",
+    async function(event) {
+        event.preventDefault();
+
+        const form = this;
+        const submitButton =
+            document.getElementById("applicationSubmitButton");
+        const message =
+            document.getElementById("applicationMessage");
+
+        const jobId = Number(
+            document.getElementById("applicationJobId").value
+        );
+
+        const applicantName =
+            document.getElementById("applicantName").value.trim();
+
+        const applicantEmail =
+            document.getElementById("applicantEmail").value.trim();
+
+        const applicantPhone =
+            document.getElementById("applicantPhone").value.trim();
+
+        const coverLetter =
+            document.getElementById("coverLetter").value.trim();
+
+       
+
+        if (!Number.isSafeInteger(jobId) || jobId <= 0) {
+            message.textContent = "Please select a valid online job.";
+            return;
+        }
+
+        if (!applicantName || !applicantEmail) {
+            message.textContent =
+                "Please enter your name and email address.";
+            return;
+        }
+
+        
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Submitting...";
+        message.textContent = "";
+
+        let uploadedCVPath = null;
+
+        try {
+           
+            // Save the application and its private CV path.
+            message.textContent = "Saving your application...";
+
+            
+const { data, error } = await starJobsSupabase.functions.invoke(
+    "starjobs-submit",
+    {
+        body: {
+            type: "application",
+            application: {
+                job_id: jobId,
+                applicant_name: applicantName,
+                applicant_email: applicantEmail,
+                applicant_phone: applicantPhone || null,
+                cover_letter: coverLetter || null,
+                cv_path: null
+            }
+        }
+    }
+);
+
+if (error) {
+    throw error;
+}
+
+if (!data || !data.success) {
+    throw new Error(data?.error || "Could not submit the application.");
+}
+
+if (!data.uploadToken) {
+    delete window.starJobsPendingCV;
+
+    message.textContent =
+        "Your application was submitted, but CV upload could not be prepared. You can continue without a CV.";
+
+    document.getElementById("cvUploadAfterSubmit").style.display = "none";
+} else {
+    window.starJobsPendingCV = {
+        applicationId: data.id,
+        uploadToken: data.uploadToken
+    };
+
+    message.textContent =
+        "Application submitted successfully! You can upload your CV next.";
+
+    document.getElementById("cvUploadAfterSubmit").style.display = "block";
+}
+
+
+form.reset();
+submitButton.textContent = "Application Submitted";
+
+
+            // Keep the button disabled to prevent duplicate submissions.
+        } catch (error) {
+            console.error("StarJobs application error:", error);
+
+            message.textContent =
+                "Application failed: " + error.message +
+                ". Please try again.";
+
+            submitButton.disabled = false;
+            submitButton.textContent = "Submit Application";
+        }
+    }
+);
+
+
+   
+document.getElementById("cancelApplicationButton").addEventListener(
+    "click",
+    function() {
+        document.getElementById("applicationForm").reset();
+        document.getElementById("applicationMessage").textContent = "";
+        document.getElementById("applicationSubmitButton").disabled = false;
+        document.getElementById("applicationSection").style.display = "none";
+    }
+);
+
+document.getElementById("uploadCVButton").addEventListener(
+    "click",
+    async function () {
+        const uploadMessage = document.getElementById("cvUploadMessage");
+        const fileInput = document.getElementById("cvAfterSubmit");
+        const uploadButton = document.getElementById("uploadCVButton");
+        const pendingCV = window.starJobsPendingCV;
+        const file = fileInput.files[0];
+
+        const allowedTypes = [
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ];
+
+        if (!pendingCV || !pendingCV.applicationId || !pendingCV.uploadToken) {
+            uploadMessage.textContent =
+                "Upload authorization is missing. Please submit your application again.";
+            return;
+        }
+
+        if (!file) {
+            uploadMessage.textContent = "Please choose a CV file first.";
+            return;
+        }
+
+        const extension = file.name.split(".").pop().toLowerCase();
+
+        if (
+            !["pdf", "docx"].includes(extension) ||
+            !allowedTypes.includes(file.type)
+        ) {
+            uploadMessage.textContent = "Please choose a PDF or DOCX file.";
+            return;
+        }
+
+        if (file.size < 1 || file.size > 5 * 1024 * 1024) {
+            uploadMessage.textContent =
+                "Your CV must be larger than 0 bytes and no larger than 5 MB.";
+            return;
+        }
+
+        uploadButton.disabled = true;
+        uploadButton.textContent = "Preparing upload...";
+        uploadMessage.textContent = "";
+
+        try {
+            const { data: uploadData, error: uploadError } =
+                await starJobsSupabase.functions.invoke(
+                    "starjobs-submit",
+                    {
+                        body: {
+                            type: "cv-upload-url",
+                            application_id: pendingCV.applicationId,
+                            upload_token: pendingCV.uploadToken,
+                            content_type: file.type
+                        }
+                    }
+                );
+
+            if (uploadError) throw uploadError;
+
+            if (!uploadData || !uploadData.success) {
+                throw new Error(
+                    uploadData?.error || "Could not prepare the CV upload."
+                );
+            }
+
+            uploadButton.textContent = "Uploading CV...";
+
+            const { error: storageError } =
+                await starJobsSupabase.storage
+                    .from("starjobs-cvs")
+                    .uploadToSignedUrl(
+                        uploadData.path,
+                        uploadData.token,
+                        file,
+                        {
+                            contentType: file.type,
+                            upsert: false
+                        }
+                    );
+
+            if (storageError) throw storageError;
+
+            uploadButton.textContent = "Confirming upload...";
+
+            const { data: completeData, error: completeError } =
+                await starJobsSupabase.functions.invoke(
+                    "starjobs-submit",
+                    {
+                        body: {
+                            type: "cv-upload-complete",
+                            application_id: pendingCV.applicationId,
+                            upload_token: pendingCV.uploadToken
+                        }
+                    }
+                );
+
+            if (completeError) throw completeError;
+
+            if (!completeData || !completeData.success) {
+                throw new Error(
+                    completeData?.error || "Could not confirm the CV upload."
+                );
+            }
+
+            uploadMessage.textContent = "CV uploaded successfully!";
+            uploadButton.textContent = "CV Uploaded";
+            fileInput.disabled = true;
+            delete window.starJobsPendingCV;
+        } catch (error) {
+            console.error("StarJobs CV upload error:", error);
+            uploadMessage.textContent =
+                "CV upload failed: " + error.message +
+                ". You can try again if the upload authorization is still valid.";
+            uploadButton.disabled = false;
+            uploadButton.textContent = "Try Upload Again";
+        }
+    }
+);
+      
+</script>
+
+  
+<!-- STARJOBS EMPLOYER JOB POSTING FORM -->
+<section id="post-job" class="post-job-section">
+    <h2>Post a Job on StarJobs</h2>
+    <p>Reach qualified job seekers in Kenya and around the world.</p>
+
+    <form id="jobForm">
+        <label for="company">Company Name *</label>
+        <input type="text" id="company" name="company" required>
+
+        <label for="employerEmail">Employer Email *</label>
+        <input type="email" id="employerEmail"
+               name="employerEmail" required>
+
+        <label for="jobTitle">Job Title *</label>
+        <input type="text" id="jobTitle" name="jobTitle" required>
+
+        <label for="jobCategory">Job Category *</label>
+        <select id="jobCategory" name="category" required>
+            <option value="">Choose a category</option>
+            <option>Customer Support</option>
+            <option>Data Entry</option>
+            <option>Technology</option>
+            <option>Marketing</option>
+            <option>Education</option>
+            <option>Business</option>
+            <option>Healthcare</option>
+            <option>Hospitality</option>
+            <option>Other</option>
+        </select>
+
+        <label for="jobLocation">Job Location *</label>
+        <input type="text" id="jobLocation" name="location"
+               placeholder="e.g. Nairobi, Kenya or Remote" required>
+
+        <label for="employmentType">Employment Type *</label>
+        <select id="employmentType" name="employmentType" required>
+            <option value="">Choose employment type</option>
+            <option>Full-time</option>
+            <option>Part-time</option>
+            <option>Contract</option>
+            <option>Internship</option>
+            <option>Remote</option>
+        </select>
+
+        <label for="salary">Salary Range (Optional)</label>
+        <input type="text" id="salary" name="salary"
+               placeholder="e.g. KSh 30,000–50,000 per month">
+
+        <label for="description">Job Description *</label>
+        <textarea id="description" name="description"
+                  rows="5" required></textarea>
+
+        <label for="requirements">Job Requirements *</label>
+        <textarea id="requirements" name="requirements"
+                  rows="5" required></textarea>
+
+        <button type="submit">Submit Job</button>
+    </form>
+
+    <p id="jobMessage" role="status" aria-live="polite"></p>
+</section>
+
+<script>
+
+document.getElementById("jobForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const job = {
+        company: document.getElementById("company").value.trim(),
+        email: document.getElementById("employerEmail").value.trim(),
+        title: document.getElementById("jobTitle").value.trim(),
+        category: document.getElementById("jobCategory").value,
+        location: document.getElementById("jobLocation").value.trim(),
+        type: document.getElementById("employmentType").value,
+        salary: document.getElementById("salary").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        requirements: document.getElementById("requirements").value.trim()
+    };
+
+    const message = document.getElementById("jobMessage");
+    const submitButton = this.querySelector('button[type="submit"]');
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting...";
+    message.textContent = "";
+
+    try {
+
+const { data: sessionData, error: sessionError } =
+    await starJobsSupabase.auth.getSession();
+
+if (sessionError || !sessionData.session) {
+    message.textContent =
+        "Please sign in to your employer account before submitting a job. Open employer.html, sign in, then return here and try again.";
+    return;
+}
+
+const { data, error } = await starJobsSupabase.functions.invoke(
+    "starjobs-submit",
+    {
+        body: {
+            type: "job",
+            job: {
+                company: job.company,
+                employer_email: job.email,
+                title: job.title,
+                category: job.category,
+                location: job.location,
+                employment_type: job.type,
+                salary: job.salary || null,
+                description: job.description,
+                requirements: job.requirements || null
+            }
+        }
+    }
+);
+
+
+if (error) {
+    throw error;
+}
+
+if (!data || !data.success) {
+    throw new Error(data?.error || "Could not submit the job.");
+}
+        message.textContent =
+            "Success! Your job has been submitted online for review. It will not appear publicly until approved.";
+
+        this.reset();
+
+        console.log("StarJobs: job submitted successfully for review.");
+    } catch (error) {
+        console.error("StarJobs submission error:", error);
+
+        message.textContent =
+            "Submission failed: " + error.message +
+            ". Please check your connection and try again.";
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit Job";
+    }
+});
+
+</script>
+
+</body>
+</html>
+
+
+
+
