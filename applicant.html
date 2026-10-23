@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applicant Account | StarJobs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6fa;
+      margin: 0;
+      padding: 24px;
+      color: #172033;
+    }
+    main {
+      max-width: 440px;
+      margin: 40px auto;
+      background: white;
+      padding: 28px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px #00000012;
+    }
+    h1 { margin-top: 0; color: #164e9b; }
+    label { display: block; margin-top: 16px; font-weight: bold; }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      margin-top: 7px;
+      border: 1px solid #ccd3df;
+      border-radius: 6px;
+    }
+    button {
+      padding: 12px 16px;
+      margin: 14px 8px 0 0;
+      border: 0;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #164e9b;
+      color: white;
+    }
+    button:disabled { opacity: .6; cursor: wait; }
+    #message { margin-top: 18px; overflow-wrap: anywhere; }
+    a { color: #164e9b; }
+    .secondary { background: #526174; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>StarJobs Applicant Account</h1>
+  <p>Create an account with your email, then confirm it using the email we send you.</p>
+
+  <form id="accountForm">
+    <label for="email">Email address</label>
+    <input id="email" type="email" autocomplete="email" required maxlength="254">
+
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="new-password"
+      required minlength="8" maxlength="128">
+
+    <button id="signupButton" type="button">Create account</button>
+    <button id="signinButton" type="submit">Sign in</button>
+    <button id="signoutButton" type="button" class="secondary" hidden>
+      Sign out
+    </button>
+  </form>
+
+  <p id="message" role="status" aria-live="polite"></p>
+  <p><a href="./index.html">Back to StarJobs jobs</a></p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://egzouchzmiveumxrznqa.supabase.co";
+
+  // This is the public publishable key used by the existing StarJobs site.
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_A4t_XUSk9tHrXx-ZqCegLQ_Pd7H5Uyw";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  const form = document.getElementById("accountForm");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const signupButton = document.getElementById("signupButton");
+  const signinButton = document.getElementById("signinButton");
+  const signoutButton = document.getElementById("signoutButton");
+  const message = document.getElementById("message");
+
+  function showMessage(text) {
+    message.textContent = text;
+  }
+
+  function setBusy(busy) {
+    signupButton.disabled = busy;
+    signinButton.disabled = busy;
+    signoutButton.disabled = busy;
+  }
+
+  async function updateSessionDisplay() {
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error) {
+      showMessage("Could not check your session. Please refresh the page.");
+      return;
+    }
+
+    if (data.session) {
+      showMessage("Signed in as " + data.session.user.email +
+        ". You can return to the job listings.");
+      signoutButton.hidden = false;
+      signinButton.hidden = true;
+      signupButton.hidden = true;
+    } else {
+      signoutButton.hidden = true;
+      signinButton.hidden = false;
+      signupButton.hidden = false;
+    }
+  }
+
+  signupButton.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!form.reportValidity()) return;
+
+    setBusy(true);
+    showMessage("Creating your account...");
+
+    try {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: "https://niceguy-031.github.io/starjobs/applicant.html"
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        showMessage("Your account was created and you are signed in. Email confirmation may not be required by the current project settings; verify the settings before using applications.");
+      } else {
+        showMessage("If the address can be registered, Supabase will send a confirmation email. Open that email and follow its link, then return here to sign in.");
+      }
+    } catch (error) {
+      showMessage(error.message || "Could not create your account. Please try again.");
+    } finally {
+      setBusy(false);
+      await updateSessionDisplay();
+    }
+  });
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!form.reportValidity()) return;
+
+    setBusy(true);
+    showMessage("Signing in...");
+
+    try {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: emailInput.value.trim(),
+        password: passwordInput.value
+      });
+
+      if (error) throw error;
+
+      if (!data.user || !data.session) {
+        showMessage("Sign-in was not completed. Please confirm your email and try again.");
+      } else if (!data.user.email_confirmed_at) {
+        await supabaseClient.auth.signOut();
+        showMessage("Please confirm your email from the message Supabase sent before signing in.");
+      } else {
+        showMessage("You are signed in. Return to the job listings to continue.");
+        passwordInput.value = "";
+      }
+    } catch (error) {
+      showMessage(error.message || "Sign-in failed. Check your email and password.");
+    } finally {
+      setBusy(false);
+      await updateSessionDisplay();
+    }
+  });
+
+  signoutButton.addEventListener("click", async () => {
+    setBusy(true);
+    try {
+      const { error } = await supabaseClient.auth.signOut();
+      if (error) throw error;
+      passwordInput.value = "";
+      showMessage("You have signed out.");
+    } catch (error) {
+      showMessage(error.message || "Sign-out failed.");
+    } finally {
+      setBusy(false);
+      await updateSessionDisplay();
+    }
+  });
+
+  updateSessionDisplay();
+</script>
+</body>
+</html>
