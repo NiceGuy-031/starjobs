@@ -758,7 +758,7 @@ document.getElementById("postJob")
     displayJobs();
 loadApprovedJobs();
 </script>
-  </script>
+  
   
 <section id="applicationSection"
          style="display: none; max-width: 700px; margin: 30px auto; padding: 24px; background: #f3f6fb; border-radius: 12px;">
@@ -1106,6 +1106,56 @@ document.getElementById("uploadCVButton").addEventListener(
     }
 );
       
+    // Reopen the selected job after an applicant signs in.
+    window.addEventListener("load", async function () {
+        const params = new URLSearchParams(window.location.search);
+        const requestedJobId = params.get("apply");
+
+        if (!requestedJobId) return;
+
+        const jobId = Number(requestedJobId);
+
+        if (!Number.isSafeInteger(jobId) || jobId <= 0) return;
+
+        const { data, error } =
+            await starJobsSupabase.auth.getSession();
+
+        if (error || !data?.session) return;
+
+        // Ensure approved online jobs have loaded.
+        if (!onlineJobs.some(job => String(job.id) === String(jobId))) {
+            await loadApprovedJobs();
+        }
+
+        const job = onlineJobs.find(
+            item =>
+                String(item.id) === String(jobId) &&
+                item.source === "supabase" &&
+                !item.pending
+        );
+
+        if (job) {
+            await openApplicationForm(job);
+        } else {
+            document.getElementById("jobs").scrollIntoView({
+                behavior: "smooth"
+            });
+
+            document.getElementById("resultCount").textContent =
+                "That job is no longer available. Please select another approved job.";
+        }
+
+        // Remove the temporary job ID from the address bar.
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete("apply");
+
+        window.history.replaceState(
+            {},
+            "",
+            cleanUrl.pathname + cleanUrl.search + cleanUrl.hash
+        );
+    });
+
 </script>
 
   
