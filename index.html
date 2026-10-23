@@ -816,11 +816,26 @@ loadApprovedJobs();
 </section>
 
 <script>
-    // Open the application form for an approved online job.
-    function openApplicationForm(job) {
+    
+    // Open the application form only for signed-in applicants.
+    async function openApplicationForm(job) {
+        const { data, error } = await starJobsSupabase.auth.getSession();
+
+        if (error || !data?.session) {
+            const returnUrl = new URL("index.html", window.location.href);
+            returnUrl.searchParams.set("apply", String(job.id));
+
+            window.location.href =
+                "applicant.html?returnTo=" +
+                encodeURIComponent(returnUrl.pathname + returnUrl.search);
+
+            return;
+        }
+
         const section = document.getElementById("applicationSection");
         const form = document.getElementById("applicationForm");
-        const submitButton = document.getElementById("applicationSubmitButton");
+        const submitButton =
+            document.getElementById("applicationSubmitButton");
 
         form.reset();
 
@@ -829,12 +844,15 @@ loadApprovedJobs();
             "Applying for: " + job.title + " at " + job.company;
 
         document.getElementById("applicationMessage").textContent = "";
+        document.getElementById("cvUploadAfterSubmit").style.display = "none";
+
         submitButton.disabled = false;
         submitButton.textContent = "Submit Application";
 
         section.style.display = "block";
         section.scrollIntoView({ behavior: "smooth" });
     }
+
 
     // Submit the application to Supabase.
     
