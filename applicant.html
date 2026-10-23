@@ -176,10 +176,25 @@
       } else if (!data.user.email_confirmed_at) {
         await supabaseClient.auth.signOut();
         showMessage("Please confirm your email from the message Supabase sent before signing in.");
-      } else {
-        showMessage("You are signed in. Return to the job listings to continue.");
-        passwordInput.value = "";
-      }
+      
+} else {
+  passwordInput.value = "";
+
+  const params = new URLSearchParams(window.location.search);
+  const returnTo = params.get("returnTo");
+
+  showMessage("You are signed in successfully.");
+
+  if (
+    returnTo &&
+    returnTo.startsWith("/") &&
+    !returnTo.startsWith("//") &&
+    !returnTo.includes("\\")
+  ) {
+    window.location.href = returnTo;
+  }
+}
+
     } catch (error) {
       showMessage(error.message || "Sign-in failed. Check your email and password.");
     } finally {
