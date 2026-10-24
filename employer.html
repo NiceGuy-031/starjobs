@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employer Account | StarJobs</title>
+  <meta name="description" content="Create an employer account and post jobs on StarJobs.">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #123b70;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header a {
+      color: white;
+    }
+
+    main {
+      width: min(900px, 92%);
+      margin: 30px auto;
+    }
+
+    section {
+      background: white;
+      padding: 24px;
+      margin-bottom: 24px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #00000010;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0 16px;
+      font: inherit;
+    }
+
+    button {
+      background: #123b70;
+      color: white;
+      border: 0;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    [role="status"] {
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>StarJobs Employer Centre</h1>
+    <p>Connect with suitable candidates in Kenya and internationally.</p>
+    <a href="./index.html">Back to Homepage</a>
+  </header>
+
+  <main>
+    <section id="employerAccount">
+      <h2>Employer Sign Up / Sign In</h2>
+      <p>Create an employer account or sign in to continue.</p>
+      <p id="accountMessage" role="status" aria-live="polite">
+        Account features will be connected in the next step.
+      </p>
+    </section>
+
+    <section id="postJobSection">
+      <h2>Post a Job</h2>
+      <p>
+        Sign in to submit a job. New submissions remain pending until
+        reviewed and approved by a StarJobs administrator.
+      </p>
+      <p id="jobMessage" role="status" aria-live="polite">
+        Job submission will be connected in the next step.
+      </p>
+    </section>
+
+    <section id="myJobsSection">
+      <h2>My Jobs</h2>
+      <p>View the jobs submitted under your employer account.</p>
+      <p id="myJobsMessage" role="status" aria-live="polite">
+        Your submitted jobs will appear here after sign-in.
+      </p>
+      <div id="myJobsList"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 StarJobs. Find Work. Build Your Future.</p>
+  </footer>
+</body>
+</html>
