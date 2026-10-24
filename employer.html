@@ -328,8 +328,7 @@
     }
     submitJobButton.disabled = true;
     jobMessage.textContent = "Submitting your job...";
-
-   
+    try {   
 const { data, error } = await supabaseClient.functions.invoke(
   "starjobs-submit",
   {
