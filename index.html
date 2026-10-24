@@ -234,14 +234,6 @@
     background: #1d4f91;
 }
 
-#post-job #jobMessage {
-    margin-top: 15px;
-    color: #166534;
-    font-weight: 600;
-    text-align: center;
-}
-
-
 /* STARJOBS EMPLOYER FORM */
 #post-job.post-job-section {
     width: calc(100% - 32px);
@@ -316,13 +308,6 @@
 #post-job button:hover {
     background: #1d4f91;
 }
-
-#post-job #jobMessage {
-    margin-top: 15px;
-    color: #166534;
-    font-weight: 600;
-}
-
 @media (max-width: 600px) {
     #post-job.post-job-section {
         margin: 25px auto;
@@ -407,40 +392,7 @@
   </a>
 </div>
 
-    <form class="search" id="searchForm">
-      <input
-        id="keyword"
-        type="search"
-        placeholder="Job title or skill"
-        aria-label="Job title or skill"
-      >
-
-      <select id="location" aria-label="Location">
-        <option value="">Any location</option>
-        <option value="Kenya">Kenya</option>
-        <option value="Remote">Remote</option>
-        <option value="International">International</option>
-      </select>
-      
-<select id="categoryFilter" aria-label="Job category">
-  <option value="">All categories</option>
-  <option value="Customer Support">Customer Support</option>
-  <option value="Data Entry">Data Entry</option>
-  <option value="Technology">Technology</option>
-  <option value="Marketing">Marketing</option>
-</select>
-
-<select id="employmentTypeFilter" aria-label="Employment type">
-  <option value="">All employment types</option>
-  <option value="Full-time">Full-time</option>
-  <option value="Part-time">Part-time</option>
-  <option value="Contract">Contract</option>
-  <option value="Internship">Internship</option>
-</select>
-
-
-      <button type="submit">Search Jobs</button>
-    </form>
+    
   </section>
 
   <section class="section" id="categories">
@@ -572,15 +524,8 @@
       }
     ];
 
-    const jobList = document.getElementById("jobList");
-    const keyword = document.getElementById("keyword");
-    const locationSelect = document.getElementById("location");
-    
-const categoryFilter = document.getElementById("categoryFilter");
-const employmentTypeFilter = document.getElementById("employmentTypeFilter");
-
-    
-    const resultCount = document.getElementById("resultCount");
+  const jobList = document.getElementById("jobList");
+const resultCount = document.getElementById("resultCount");
 
     let activeCategory = "";
     // Jobs loaded from Supabase
@@ -656,10 +601,10 @@ async function loadApprovedJobs() {
 
 function displayJobs() {
       
-const term = keyword.value.trim().toLowerCase();
-const location = locationSelect.value;
-const selectedCategory = categoryFilter.value;
-const selectedEmploymentType = employmentTypeFilter.value;
+const term = "";
+const location = "";
+const selectedCategory = "";
+const selectedEmploymentType = "";
 
 
 const filteredJobs = getAllJobs().filter(job => {
@@ -667,34 +612,10 @@ const filteredJobs = getAllJobs().filter(job => {
           `${job.title} ${job.company} ${job.category} ${job.description}`
           .toLowerCase();
 
-        const matchesKeyword =
-          !term || searchableText.includes(term);
+        const matchesCategory =
+    !activeCategory || job.category === activeCategory;
 
-        
-const matchesCategory =
-    (!activeCategory || job.category === activeCategory) &&
-    (!selectedCategory || job.category === selectedCategory);
-
-const matchesEmploymentType =
-    !selectedEmploymentType ||
-    (job.employment_type || "").toLowerCase() ===
-    selectedEmploymentType.toLowerCase();
-
-
-        let matchesLocation = true;
-
-        if (location === "Kenya") {
-          matchesLocation = job.location === "Kenya";
-        } else if (location === "Remote") {
-          matchesLocation = job.work === "Remote";
-        } else if (location === "International") {
-          matchesLocation = job.location === "International";
-        }
-
-        return matchesKeyword &&
-       matchesCategory &&
-       matchesLocation &&
-       matchesEmploymentType;
+return matchesCategory;
       });
 
       resultCount.textContent =
@@ -763,19 +684,6 @@ card.append(description, button);
         jobList.appendChild(card);
       });
     }
-
-    document.getElementById("searchForm")
-      .addEventListener("submit", function(event) {
-        event.preventDefault();
-        displayJobs();
-        document.getElementById("jobs")
-          .scrollIntoView({ behavior: "smooth" });
-      });
-
-    
-categoryFilter.addEventListener("change", displayJobs);
-employmentTypeFilter.addEventListener("change", displayJobs);
-
 
     document.querySelectorAll(".category")
       .forEach(category => {
@@ -1304,143 +1212,9 @@ document.getElementById("uploadCVButton").addEventListener(
     <h2>Post a Job on StarJobs</h2>
     <p>Reach qualified job seekers in Kenya and around the world.</p>
 
-    <form id="jobForm">
-        <label for="company">Company Name *</label>
-        <input type="text" id="company" name="company" required>
-
-        <label for="employerEmail">Employer Email *</label>
-        <input type="email" id="employerEmail"
-               name="employerEmail" required>
-
-        <label for="jobTitle">Job Title *</label>
-        <input type="text" id="jobTitle" name="jobTitle" required>
-
-        <label for="jobCategory">Job Category *</label>
-        <select id="jobCategory" name="category" required>
-            <option value="">Choose a category</option>
-            <option>Customer Support</option>
-            <option>Data Entry</option>
-            <option>Technology</option>
-            <option>Marketing</option>
-            <option>Education</option>
-            <option>Business</option>
-            <option>Healthcare</option>
-            <option>Hospitality</option>
-            <option>Other</option>
-        </select>
-
-        <label for="jobLocation">Job Location *</label>
-        <input type="text" id="jobLocation" name="location"
-               placeholder="e.g. Nairobi, Kenya or Remote" required>
-
-        <label for="employmentType">Employment Type *</label>
-        <select id="employmentType" name="employmentType" required>
-            <option value="">Choose employment type</option>
-            <option>Full-time</option>
-            <option>Part-time</option>
-            <option>Contract</option>
-            <option>Internship</option>
-            <option>Remote</option>
-        </select>
-
-        <label for="salary">Salary Range (Optional)</label>
-        <input type="text" id="salary" name="salary"
-               placeholder="e.g. KSh 30,000–50,000 per month">
-
-        <label for="description">Job Description *</label>
-        <textarea id="description" name="description"
-                  rows="5" required></textarea>
-
-        <label for="requirements">Job Requirements *</label>
-        <textarea id="requirements" name="requirements"
-                  rows="5" required></textarea>
-
-        <button type="submit">Submit Job</button>
-    </form>
-
-    <p id="jobMessage" role="status" aria-live="polite"></p>
-</section>
+  </section>
 
 <script>
-
-document.getElementById("jobForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    const job = {
-        company: document.getElementById("company").value.trim(),
-        email: document.getElementById("employerEmail").value.trim(),
-        title: document.getElementById("jobTitle").value.trim(),
-        category: document.getElementById("jobCategory").value,
-        location: document.getElementById("jobLocation").value.trim(),
-        type: document.getElementById("employmentType").value,
-        salary: document.getElementById("salary").value.trim(),
-        description: document.getElementById("description").value.trim(),
-        requirements: document.getElementById("requirements").value.trim()
-    };
-
-    const message = document.getElementById("jobMessage");
-    const submitButton = this.querySelector('button[type="submit"]');
-
-    submitButton.disabled = true;
-    submitButton.textContent = "Submitting...";
-    message.textContent = "";
-
-    try {
-
-const { data: sessionData, error: sessionError } =
-    await starJobsSupabase.auth.getSession();
-
-if (sessionError || !sessionData.session) {
-    message.textContent =
-        "Please sign in to your employer account before submitting a job. Open employer.html, sign in, then return here and try again.";
-    return;
-}
-
-const { data, error } = await starJobsSupabase.functions.invoke(
-    "starjobs-submit",
-    {
-        body: {
-            type: "job",
-            job: {
-                company: job.company,
-                employer_email: job.email,
-                title: job.title,
-                category: job.category,
-                location: job.location,
-                employment_type: job.type,
-                salary: job.salary || null,
-                description: job.description,
-                requirements: job.requirements || null
-            }
-        }
-    }
-);
-
-
-if (error) {
-    throw error;
-}
-
-if (!data || !data.success) {
-    throw new Error(data?.error || "Could not submit the job.");
-}
-        message.textContent =
-            "Success! Your job has been submitted online for review. It will not appear publicly until approved.";
-
-        this.reset();
-
-        console.log("StarJobs: job submitted successfully for review.");
-    } catch (error) {
-        console.error("StarJobs submission error:", error);
-
-        message.textContent =
-            "Submission failed: " + error.message +
-            ". Please check your connection and try again.";
-    } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = "Submit Job";
-    }
-});
 
 </script>
 
