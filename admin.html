@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StarJobs | Admin Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #14243a;
+      --blue: #2457d6;
+      --bg: #f4f7fb;
+      --border: #dce3ed;
+      --muted: #637083;
+      --green: #16794b;
+      --red: #b42318;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: #182230;
+    }
+
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 22px 16px;
+    }
+
+    .header-inner, main {
+      width: min(1100px, 94%);
+      margin: 0 auto;
+    }
+
+    header h1 { margin: 0 0 7px; font-size: 25px; }
+    header p { margin: 0; color: #d7e2f0; }
+
+    main { padding: 25px 0 45px; }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 12px #14243a0a;
+    }
+
+    h2 { margin-top: 0; font-size: 20px; }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin: 14px 0 7px;
+    }
+
+    input {
+      width: 100%;
+      max-width: 430px;
+      padding: 12px;
+      border: 1px solid #bac6d5;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 11px 15px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--blue);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 12px 7px 0 0;
+    }
+
+    button:disabled { opacity: .6; cursor: wait; }
+    button.secondary { background: #e8edf5; color: #24344b; }
+    button.danger { background: #a52b25; }
+
+    .muted { color: var(--muted); line-height: 1.5; }
+    .message { margin-top: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+    .error { color: var(--red); }
+    .success { color: var(--green); }
+
+    .hidden { display: none !important; }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 690px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    th { background: #f5f7fb; font-size: 13px; }
+    td { font-size: 14px; }
+    td button { margin: 0; white-space: nowrap; }
+
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #eef2f7;
+      border-radius: 20px;
+      text-transform: capitalize;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 18px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>StarJobs Administrator</h1>
+      <p>Private application review and CV access</p>
+    </div>
+  </header>
+
+  <main>
+    <section id="loginPanel" class="panel">
+      <h2>Administrator sign-in</h2>
+      <p class="muted">
+        Sign in using your existing StarJobs administrator account.
+        Access is verified by Supabase before applications can be displayed.
+      </p>
+
+      <form id="loginForm">
+        <label for="email">Email address</label>
+        <input id="email" type="email" autocomplete="username" required>
+
+        <label for="password">Password</label>
+        <input id="password" type="password"
+               autocomplete="current-password" required>
+
+        <div>
+          <button id="loginButton" type="submit">Sign in</button>
+        </div>
+      </form>
+      <p id="loginMessage" class="message" role="status"></p>
+    </section>
+
+    <section id="dashboardPanel" class="hidden">
+      <div class="panel">
+        <h2>Applications</h2>
+        <p class="muted">
+          This private table shows basic application details and whether a CV
+          is available. Use the CV button only when you need to review that
+          applicant's document. CV links expire after 60 seconds.
+        </p>
+        <p id="adminIdentity" class="muted"></p>
+        <button id="refreshButton" type="button">Refresh applications</button>
+        <button id="logoutButton" type="button" class="secondary">Sign out</button>
+        <p id="dashboardMessage" class="message" role="status"></p>
+      </div>
+
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Application</th>
+                <th>Applicant</th>
+                <th>Job ID</th>
+                <th>Status</th>
+                <th>Submitted</th>
+                <th>CV</th>
+              </tr>
+            </thead>
+            <tbody id="applicationsBody">
+              <tr><td colspan="6">Sign in to load applications.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>StarJobs · Administrator access only</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    "use strict";
+
+    const SUPABASE_URL = "https://egzouchzmiveumxrznqa.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_A4t_xUSk9tHrXx-ZqCegLQ_Pd7H5Uyw";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const loginPanel = document.getElementById("loginPanel");
+    const dashboardPanel = document.getElementById("dashboardPanel");
+    const loginForm = document.getElementById("loginForm");
+    const loginButton = document.getElementById("loginButton");
+    const loginMessage = document.getElementById("loginMessage");
+    const dashboardMessage = document.getElementById("dashboardMessage");
+    const applicationsBody = document.getElementById("applicationsBody");
+    const adminIdentity = document.getElementById("adminIdentity");
+    const refreshButton = document.getElementById("refreshButton");
+    const logoutButton = document.getElementById("logoutButton");
+
+    let loadingApplications = false;
+
+    function setMessage(element, message, type = "") {
+      element.textContent = message;
+      element.className = "message" + (type ? " " + type : "");
+    }
+
+    function showLogin(message = "") {
+      dashboardPanel.classList.add("hidden");
+      loginPanel.classList.remove("hidden");
+      adminIdentity.textContent = "";
+      applicationsBody.replaceChildren();
+      document.getElementById("password").value = "";
+      setMessage(loginMessage, message, message ? "error" : "");
+    }
+
+    function showDashboard(email) {
+      loginPanel.classList.add("hidden");
+      dashboardPanel.classList.remove("hidden");
+      adminIdentity.textContent = "Signed in as " + email;
+    }
+
+    async function verifyAdministrator() {
+      const { data: { user }, error: userError } =
+        await supabaseClient.auth.getUser();
+
+      if (userError || !user) {
+        return { allowed: false, email: "" };
+      }
+
+      const { data, error } = await supabaseClient.rpc(
+        "is_starjobs_admin"
+      );
+
+      if (error || data !== true) {
+        return { allowed: false, email: user.email || "" };
+      }
+
+      return { allowed: true, email: user.email || "" };
+    }
+
+    function addCell(row, value) {
+      const cell = document.createElement("td");
+      cell.textContent = value == null ? "" : String(value);
+      row.appendChild(cell);
+      return cell;
+    }
+
+    async function loadApplications() {
+      if (loadingApplications) return;
+      loadingApplications = true;
+      refreshButton.disabled = true;
+      applicationsBody.replaceChildren();
+      setMessage(dashboardMessage, "Loading applications…");
+
+      try {
+        const admin = await verifyAdministrator();
+
+        if (!admin.allowed) {
+          showLogin("Administrator access could not be verified. Please sign in with your administrator account.");
+          return;
+        }
+
+        const { data, error } = await supabaseClient
+          .from("applications")
+          .select("id, applicant_name, job_id, status, created_at, cv_path")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          const row = document.createElement("tr");
+          const cell = addCell(row, "No applications were found.");
+          cell.colSpan = 6;
+          applicationsBody.appendChild(row);
+        } else {
+          for (const app of data) {
+            const row = document.createElement("tr");
+            addCell(row, app.id);
+            addCell(row, app.applicant_name || "Not provided");
+            addCell(row, app.job_id);
+            const statusCell = addCell(row, app.status || "unknown");
+            const status = document.createElement("span");
+            status.className = "status";
+            status.textContent = app.status || "unknown";
+            statusCell.replaceChildren(status);
+
+            const date = app.created_at
+              ? new Date(app.created_at).toLocaleString()
+              : "Unknown";
+            addCell(row, date);
+
+            const cvCell = document.createElement("td");
+
+            if (app.cv_path) {
+              const cvButton = document.createElement("button");
+              cvButton.type = "button";
+              cvButton.textContent = "Open CV";
+              cvButton.addEventListener("click", () => openCV(app.id, cvButton));
+              cvCell.appendChild(cvButton);
+            } else {
+              cvCell.textContent = "No CV";
+            }
+
+            row.appendChild(cvCell);
+            applicationsBody.appendChild(row);
+          }
+        }
+
+        setMessage(
+          dashboardMessage,
+          "Loaded " + (data ? data.length : 0) + " application(s).",
+          "success"
+        );
+      } catch (error) {
+        console.error("Application loading failed:", error);
+        setMessage(
+          dashboardMessage,
+          "Could not load applications. Check your administrator access and try again.",
+          "error"
+        );
+      } finally {
+        loadingApplications = false;
+        refreshButton.disabled = false;
+      }
+    }
+
+    async function openCV(applicationId, button) {
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = "Preparing…";
+      setMessage(dashboardMessage, "Checking administrator access…");
+
+      try {
+        const admin = await verifyAdministrator();
+
+        if (!admin.allowed) {
+          showLogin("Administrator access could not be verified. Please sign in again.");
+          return;
+        }
+
+        const { data, error } = await supabaseClient.functions.invoke(
+          "starjobs-admin-cv",
+          { body: { application_id: applicationId } }
+        );
+
+        if (error || !data || data.success !== true || !data.signedUrl) {
+          const status = error?.context?.status;
+          if (status === 401 || status === 403) {
+            throw new Error("Administrator access was denied.");
+          }
+          throw new Error(data?.error || "Could not prepare the CV link.");
+        }
+
+        setMessage(
+          dashboardMessage,
+          "The secure CV link is ready and expires in 60 seconds.",
+          "success"
+        );
+
+        const opened = window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+        if (!opened) {
+          setMessage(
+            dashboardMessage,
+            "Your browser blocked the new tab. Allow pop-ups for this site and try again. The link expires in 60 seconds.",
+            "error"
+          );
+        }
+      } catch (error) {
+        console.error("CV request failed:", error);
+        setMessage(
+          dashboardMessage,
+          error.message || "Could not open the CV. Please try again.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+    }
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      loginButton.disabled = true;
+      setMessage(loginMessage, "Signing in…");
+
+      const email = document.getElementById("email").value.trim();
+      const passwordInput = document.getElementById("password");
+      const password = passwordInput.value;
+
+      try {
+        const { error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        passwordInput.value = "";
+
+        if (error) {
+          throw new Error("Sign-in failed. Check your email and password.");
+        }
+
+        const admin = await verifyAdministrator();
+
+        if (!admin.allowed) {
+          await supabaseClient.auth.signOut();
+          showLogin("This account is not registered as a StarJobs administrator.");
+          return;
+        }
+
+        showDashboard(admin.email);
+        await loadApplications();
+      } catch (error) {
+        console.error("Admin sign-in failed:", error);
+        showLogin(error.message || "Sign-in failed. Please try again.");
+      } finally {
+        loginButton.disabled = false;
+      }
+    });
+
+    refreshButton.addEventListener("click", loadApplications);
+
+    logoutButton.addEventListener("click", async () => {
+      logoutButton.disabled = true;
+
+      try {
+        await supabaseClient.auth.signOut();
+        showLogin("You have signed out.");
+      } catch (error) {
+        setMessage(dashboardMessage, "Sign-out failed. Please try again.", "error");
+      } finally {
+        logoutButton.disabled = false;
+      }
+    });
+
+    async function restoreSession() {
+      try {
+        const { data: { session }, error } =
+          await supabaseClient.auth.getSession();
+
+        if (error || !session) return;
+
+        const admin = await verifyAdministrator();
+
+        if (admin.allowed) {
+          showDashboard(admin.email);
+          await loadApplications();
+        } else {
+          await supabaseClient.auth.signOut();
+          showLogin("Please sign in with your StarJobs administrator account.");
+        }
+      } catch (error) {
+        console.error("Session restoration failed:", error);
+        showLogin("Please sign in to continue.");
+      }
+    }
+
+    restoreSession();
+  </script>
+</body>
+</html>
