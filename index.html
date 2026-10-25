@@ -444,27 +444,7 @@
     StarJobs.com helps employers connect with suitable
     candidates in Kenya and internationally.
   </p>
-
-  <p id="employerAccountMessage" role="status" aria-live="polite">
-    Checking your employer account...
-  </p>
-
-  <button id="employerSignIn" type="button" hidden>
-    Sign In to Your Employer Account
-  </button>
-
-  <button id="postJob" type="button">Post a Job</button>
-
-  <div id="myJobsSection" hidden>
-    <h3>My Jobs</h3>
-    <p>View your submitted jobs and their review status.</p>
-    <button id="refreshMyJobs" type="button">Refresh My Jobs</button>
-    <p id="myJobsMessage" role="status" aria-live="polite"></p>
-    <div id="myJobsList"></div>
-  </div>
 </section>
-
-
   <footer>
     <h3>StarJobs.com</h3>
     <p>Connecting people with opportunities.</p>
@@ -707,99 +687,7 @@ card.append(description, button);
             .scrollIntoView({ behavior: "smooth" });
         });
       });
-
-    
-document.getElementById("postJob")
-    .addEventListener("click", () => {
-        document.getElementById("post-job")
-            .scrollIntoView({ behavior: "smooth" });
-
-        document.getElementById("company").focus();
-    });
-    
-const employerAccountMessage =
-  document.getElementById("employerAccountMessage");
-const employerSignIn =
-  document.getElementById("employerSignIn");
-const myJobsSection =
-  document.getElementById("myJobsSection");
-const myJobsMessage =
-  document.getElementById("myJobsMessage");
-const myJobsList =
-  document.getElementById("myJobsList");
-
-employerSignIn.addEventListener("click", () => {
-  window.location.href =
-    "./applicant.html?returnTo=/index.html#employers";
-});
-
-async function loadMyJobs() {
-  myJobsMessage.textContent = "";
-  myJobsList.replaceChildren();
-
-  const { data: sessionData, error: sessionError } =
-    await starJobsSupabase.auth.getSession();
-
-  if (sessionError || !sessionData.session) {
-    employerAccountMessage.textContent =
-      "Sign in to view your submitted jobs.";
-    employerSignIn.hidden = false;
-    myJobsSection.hidden = true;
-    return;
-  }
-
-  employerSignIn.hidden = true;
-  myJobsSection.hidden = false;
-  employerAccountMessage.textContent =
-    "Signed in as " + sessionData.session.user.email;
-
-  myJobsMessage.textContent = "Loading your jobs...";
-
-  const { data: jobs, error } = await starJobsSupabase
-    .from("jobs")
-    .select("id, title, status, created_at")
-    .eq("employer_user_id", sessionData.session.user.id)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    myJobsMessage.textContent =
-      "Could not load your jobs. Please refresh and try again.";
-    console.error("StarJobs My Jobs error:", error);
-    return;
-  }
-
-  if (!jobs || jobs.length === 0) {
-    myJobsMessage.textContent =
-      "You have no jobs submitted under this account yet.";
-    return;
-  }
-
-  myJobsMessage.textContent = "";
-
-  for (const job of jobs) {
-    const item = document.createElement("article");
-    const heading = document.createElement("h4");
-    const status = document.createElement("p");
-    const date = document.createElement("p");
-
-    heading.textContent = job.title;
-    status.textContent = "Status: " + job.status;
-    date.textContent = "Submitted: " +
-      new Date(job.created_at).toLocaleDateString();
-
-    item.append(heading, status, date);
-    myJobsList.appendChild(item);
-  }
-}
-
-document.getElementById("refreshMyJobs")
-  .addEventListener("click", loadMyJobs);
-
-loadMyJobs();
-
-
-
-    displayJobs();
+displayJobs();
 loadApprovedJobs();
 </script>
   
